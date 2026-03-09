@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lab 4 - Subscription</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen p-6">
+
+<div class="max-w-sm w-full bg-white rounded-2xl shadow-md border border-gray-100 overflow-hidden
+            transition-all duration-300 hover:shadow-xl hover:ring-1 hover:ring-gray-400">
+
+    <div class="h-1.5 w-full bg-gradient-to-r from-green-400 via-emerald-400 to-cyan-500"></div>
+
+    <div class="pt-8 px-8 pb-6">
+        <h2 class="text-2xl font-bold text-gray-800 tracking-tight">Starter</h2>
+
+        <div class="inline-block bg-gray-100 text-gray-500 text-[11px] font-bold tracking-wide uppercase px-2 py-1 rounded-md mt-4">
+            7-days free then:
+        </div>
+
+        <div class="mt-4 flex items-center">
+            <img src="https://api.iconify.design/flowbite:dollar-solid.svg?color=%231f2937" class="h-8 w-auto -mr-1" alt="dollar">
+            <span class="text-4xl font-semibold text-gray-800 tracking-tight">83.25</span>
+            <span class="text-gray-400 ml-1 font-medium text-lg">/month</span>
+        </div>
+
+        <p class="text-sm text-gray-400 mt-1">
+            Billed yearly at <span class="font-bold text-gray-500">$999.00</span>
+        </p>
+
+        <div class="relative mt-8 group/btn">
+
+            <div class="absolute -top-12 left-1/2 -translate-x-1/2 bg-gray-900 text-white text-[13px] px-3 py-2 rounded-lg opacity-0 transition-opacity duration-200 pointer-events-none group-hover/btn:opacity-100 whitespace-nowrap shadow-lg">
+                You cannot downgrade your plar
+                until within 30 days of your next
+                billing date.
+                <div class="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-gray-900 rotate-45"></div>
+            </div>
+
+            <button class="w-full py-3 px-4 rounded-xl font-bold transition-all duration-200 cursor-pointer
+                   bg-[#e5e7eb] text-gray-500 border border-transparent
+                   hover:bg-white hover:text-black hover:border-gray-900 hover:shadow-sm active:scale-[0.98]">
+                Downgrade to Starter
+            </button>
+        </div>
+
+        <hr class="mt-4 mb-8 border-gray-100/80">
+
+        <ul class="space-y-5">
+            <li class="flex items-start">
+                <img src="https://api.iconify.design/iconoir:spark-solid.svg?color=%23bef264" class="w-5 h-5 mt-0.5 mr-3 shrink-0" alt="sparkle">
+                <div>
+                    <p class="text-[15px] text-gray-700 font-medium leading-tight">Primary user + 0 free team members</p>
+                    <p class="text-xs text-gray-400 mt-1">(extra team members for $35/month)</p>
+                </div>
+            </li>
+            <li class="flex items-start">
+                <img src="https://api.iconify.design/iconoir:spark-solid.svg?color=%23bef264" class="w-5 h-5 mt-0.5 mr-3 shrink-0" alt="sparkle">
+                <p class="text-[15px] text-gray-700 font-medium">Save unlimited properties</p>
+            </li>
+            <li class="flex items-start">
+                <img src="https://api.iconify.design/iconoir:spark-solid.svg?color=%23bef264" class="w-5 h-5 mt-0.5 mr-3 shrink-0" alt="sparkle">
+                <div>
+                    <p class="text-[15px] text-gray-700 font-medium"><span class="font-bold">10 000</span> exports</p>
+                    <p class="text-xs text-gray-400 mt-1">(additional exports at $0.02 each)</p>
+                </div>
+            </li>
+            <li class="flex items-start">
+                <img src="https://api.iconify.design/iconoir:spark-solid.svg?color=%23bef264" class="w-5 h-5 mt-0.5 mr-3 shrink-0" alt="sparkle">
+                <div>
+                    <p class="text-[15px] text-gray-700 font-medium"><span class="font-bold">500</span> free skip traces</p>
+                    <p class="text-xs text-gray-400 mt-1">(additional skip tracing at $0.08 each)</p>
+                </div>
+            </li>
+            <li class="flex items-start">
+                <img src="https://api.iconify.design/iconoir:spark-solid.svg?color=%23bef264" class="w-5 h-5 mt-0.5 mr-3 shrink-0" alt="sparkle">
+                <p class="text-[15px] text-gray-700 font-medium leading-none">Imports $0.01</p>
+            </li>
+        </ul>
+    </div>
+</div>
+
+</body>
+</html>
