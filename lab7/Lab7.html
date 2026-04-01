@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lab JS 2</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; line-height: 1.6; }
+        section { border-bottom: 2px solid #eee; padding-bottom: 20px; margin-bottom: 20px; }
+
+        /* Стилі для Завдання 5 (Анімація) */
+        #elid {
+            width: 100px;
+            height: 100px;
+            background-color: royalblue;
+            margin: 20px 0;
+            transition: transform 0.4s ease-in-out;
+            border-radius: 8px;
+        }
+        .controls { margin-top: 10px; }
+
+        /* Стилі для форми */
+        input { display: block; margin: 10px 0; padding: 8px; width: 250px; }
+        button { padding: 8px 15px; cursor: pointer; background: #28a745; color: white; border: none; border-radius: 4px; }
+        button:hover { background: #218838; }
+        #result { font-weight: bold; color: darkblue; margin-top: 10px; }
+    </style>
+</head>
+<body>
+
+<section>
+    <h2>Завдання 3: Пошук коду округу</h2>
+    <input type="text" id="countyInput" placeholder="Напр: Baldwin County, Alabama">
+    <button id="searchBtn">Знайти код</button>
+    <div id="result">Очікування введення...</div>
+</section>
+
+<section>
+    <h2>Завдання 4: Форма реєстрації</h2>
+    <form id="userForm">
+        <input type="text" id="first_name" placeholder="Ім'я">
+        <input type="text" id="last_name" placeholder="Прізвище">
+        <input type="email" id="email" placeholder="Електронна пошта">
+        <button type="submit">Відправити дані</button>
+    </form>
+</section>
+
+<section>
+    <h2>Завдання 5: Анімація елемента</h2>
+    <div id="elid"></div>
+    <div class="controls">
+        <button id="moveLeft">← Вліво</button>
+        <button id="moveRight">Вправо →</button>
+    </div>
+</section>
+
+<script>
+    // --- ЗАВДАННЯ 2: Логіка та змінні ---
+    let name = "Василь";
+    let admin = name;
+    console.log("Завдання 2 (admin):", admin);
+
+    if ("0") {
+        console.log("Завдання 2: Alert спрацював би (рядок '0' є true)");
+    }
+
+    // --- ЗАВДАННЯ 3: Fetch API ---
+    let countiesData = [];
+
+    async function fetchCounties() {
+        const resultDiv = document.getElementById('result');
+        try {
+            const response = await fetch('https://api.census.gov/data/2020/acs/acs5/profile?get=NAME&for=county:*');
+            const data = await response.json();
+
+            // Перетворюємо у масив об'єктів
+            countiesData = data.slice(1).map(item => ({
+                name: item[0],
+                code: item[1] + item[2] // state + county
+            }));
+            resultDiv.innerText = "Дані API завантажено. Можна шукати.";
+        } catch (error) {
+            resultDiv.innerText = "Помилка завантаження API.";
+            console.error(error);
+        }
+    }
+
+    document.getElementById('searchBtn').addEventListener('click', () => {
+        const inputVal = document.getElementById('countyInput').value.trim();
+        const found = countiesData.find(c => c.name.toLowerCase() === inputVal.toLowerCase());
+
+        const resultDiv = document.getElementById('result');
+        if (found) {
+            resultDiv.innerText = `Код округу: ${found.code}`;
+            console.log(`Знайдено код для ${inputVal}: ${found.code}`);
+        } else {
+            resultDiv.innerText = "Округ не знайдено. Перевірте назву.";
+        }
+    });
+
+    // --- ЗАВДАННЯ 4: Валідація форми ---
+    document.getElementById('userForm').addEventListener('submit', function(e) {
+        const fName = document.getElementById('first_name').value.trim();
+        const lName = document.getElementById('last_name').value.trim();
+        const email = document.getElementById('email').value.trim();
+
+        if (!fName || !lName || !email) {
+            e.preventDefault();
+            alert("Помилка: Усі поля повинні бути заповнені!");
+        } else {
+            alert(`Успіх!\nІм'я: ${fName}\nПрізвище: ${lName}\nEmail: ${email}`);
+        }
+    });
+
+    // --- ЗАВДАННЯ 5: Анімація ---
+    let currentX = 0;
+    const box = document.getElementById('elid');
+
+    document.getElementById('moveLeft').addEventListener('click', () => {
+        currentX -= 100;
+        box.style.transform = `translateX(${currentX}px)`;
+    });
+
+    document.getElementById('moveRight').addEventListener('click', () => {
+        currentX += 100;
+        box.style.transform = `translateX(${currentX}px)`;
+    });
+
+    // Запуск завантаження даних при старті
+    fetchCounties();
+</script>
+</body>
+</html>
