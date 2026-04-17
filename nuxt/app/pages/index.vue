@@ -1,5 +1,6 @@
 <script setup>
 import { ref, computed } from 'vue'
+import { useRouter } from 'vue-router'
 
 useHead({
   title: 'Список продуктів',
@@ -7,6 +8,9 @@ useHead({
     { rel: 'stylesheet', href: 'https://site-assets.fontawesome.com/releases/v6.5.1/css/all.css' }
   ]
 })
+
+const router = useRouter()
+const subscriptionStore = useSubscriptionStore()
 
 const billingCycle = ref('annual')
 
@@ -16,6 +20,11 @@ const filteredProducts = computed(() => {
   if (!products.value) return []
   return products.value.filter(item => item.cycle === billingCycle.value)
 })
+
+const choosePlanAndCheckout = (plan) => {
+  subscriptionStore.setPlan(plan)
+  router.push('/checkout')
+}
 </script>
 
 <template>
@@ -79,11 +88,11 @@ const filteredProducts = computed(() => {
 
           <div v-if="!item.fullPrice" class="h-8"></div>
 
-          <NuxtLink :to="`/checkout?title=${encodeURIComponent(item.title)}`" class="flex justify-center mb-8 mt-4 w-full block">
-            <button class="w-full py-4 px-4 bg-[#FFB800] hover:bg-[#FFC122] text-slate-900 text-[15px] font-black rounded-xl shadow-[0_4px_0_0_#D99C00] active:shadow-none active:translate-y-[4px] transition-all tracking-wide uppercase cursor-pointer border-none">
+          <div class="flex justify-center mb-8 mt-4 w-full block">
+            <button @click="choosePlanAndCheckout(item)" class="w-full py-4 px-4 bg-[#FFB800] hover:bg-[#FFC122] text-slate-900 text-[15px] font-black rounded-xl shadow-[0_4px_0_0_#D99C00] active:shadow-none active:translate-y-[4px] transition-all tracking-wide uppercase cursor-pointer border-none">
               {{ item.buttonText }}
             </button>
-          </NuxtLink>
+          </div>
 
           <div class="h-px w-full bg-gray-100 mb-8"></div>
 

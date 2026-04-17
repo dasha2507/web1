@@ -1,14 +1,22 @@
 <script setup>
-import { ref, computed } from 'vue'
-import { useRoute } from 'vue-router'
+import { ref, computed, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 
-const route = useRoute()
-const { data: products } = await useFetch('/api/products')
-
-const selectedPlan = computed(() => {
-  if (!products.value) return null
-  return products.value.find(p => p.title === route.query.title) || products.value[1]
+useHead({
+  title: 'Checkout | Оплата підписки'
 })
+
+const router = useRouter()
+const subscriptionStore = useSubscriptionStore()
+
+const selectedPlan = computed(() => subscriptionStore.selectedPlan)
+
+onMounted(() => {
+  if (!selectedPlan.value) {
+    router.push('/')
+  }
+})
+
 const totalDue = computed(() => {
   if (!selectedPlan.value) return '$0.00'
   return selectedPlan.value.cycle === 'annual'
@@ -24,7 +32,10 @@ const submitForm = async () => {
   try {
     const response = await $fetch('/api/subscription/create', {
       method: 'POST',
-      body: form.value
+      body: {
+        ...form.value,
+        planTitle: selectedPlan.value?.title
+      }
     })
     alert('Success: ' + response.message)
   } catch (error) {
@@ -97,7 +108,7 @@ const submitForm = async () => {
           <h3 class="text-[17px] font-bold text-gray-800 mb-4 border-b pb-2">Order Summary</h3>
           <div class="space-y-2.5 text-sm text-gray-600 mb-4 px-1">
             <div class="flex justify-between">
-              <span>{{ selectedPlan.title.split(' - ')[1] }} Plan</span>
+              <span>{{ selectedPlan.title.split(' - ')[1] || selectedPlan.title }} Plan</span>
               <span>{{ totalDue }}</span>
             </div>
             <div class="flex justify-between text-gray-800">
