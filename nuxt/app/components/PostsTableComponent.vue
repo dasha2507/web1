@@ -25,9 +25,9 @@
                   <td class="p-4 text-sm">{{ post.user?.name || 'Невідомо' }}</td>
                   <td class="p-4 text-sm">{{ post.category?.title || 'Без категорії' }}</td>
                   <td class="p-4 text-sm">
-                    <a :href="'/admin/blog/posts/' + post.id + '/edit'" class="text-blue-500 hover:text-blue-700 font-medium">
+                    <NuxtLink :to="'/posts/' + post.id" class="text-blue-500 hover:text-blue-700 font-medium">
                       {{ post.title }}
-                    </a>
+                    </NuxtLink>
                   </td>
                   <td class="p-4 text-sm text-gray-500">{{ post.published_at || 'Чорновик' }}</td>
                 </tr>

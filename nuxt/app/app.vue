@@ -31,7 +31,21 @@ useHead({
             class="text-gray-500 hover:text-gray-900 transition-colors py-4"
             active-class="text-blue-600 border-b-2 border-blue-500"
           >
-            Таблиця (Завдання 2)
+            Таблиця
+          </NuxtLink>
+          <NuxtLink
+            to="/BlogPosts"
+            class="text-gray-500 hover:text-gray-900 transition-colors py-4"
+            active-class="text-purple-600 border-b-2 border-purple-500"
+          >
+            Блог (HTML)
+          </NuxtLink>
+          <NuxtLink
+            to="/BlogPostsUi"
+            class="text-gray-500 hover:text-gray-900 transition-colors py-4"
+            active-class="text-orange-600 border-b-2 border-orange-500"
+          >
+            Блог (Nuxt UI)
           </NuxtLink>
         </nav>
       </template>

@@ -31,9 +31,9 @@
         </template>
 
         <template #title-cell="{ row }">
-          <a :href="'/admin/blog/posts/' + row.original.id + '/edit'" class="font-bold text-primary-600 hover:text-primary-800 hover:underline">
+          <NuxtLink :to="'/posts/' + row.original.id" class="font-bold text-primary-600 hover:text-primary-800 hover:underline">
             {{ row.original.title }}
-          </a>
+          </NuxtLink>
         </template>
 
         <template #published_at-cell="{ row }">
@@ -43,9 +43,9 @@
     </div>
 
     <div class="mt-6 flex justify-between items-center px-2">
-            <span class="text-xs font-bold text-gray-400 uppercase tracking-widest">
-                Всього записів: {{ total }}
-            </span>
+      <span class="text-xs font-bold text-gray-400 uppercase tracking-widest">
+          Всього записів: {{ total }}
+      </span>
       <UPagination
         v-model:page="currentPage"
         :total="total"
@@ -100,7 +100,6 @@ onMounted(() => {
   fetchPosts()
 })
 
-// Коли змінюється сторінка в пагінації — завантажуємо нові дані з сервера
 watch(currentPage, () => {
   fetchPosts()
 })
