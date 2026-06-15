@@ -47,6 +47,13 @@ useHead({
           >
             Блог (Nuxt UI)
           </NuxtLink>
+          <NuxtLink
+            to="/categories"
+            class="text-gray-500 hover:text-gray-900 transition-colors py-4"
+            active-class="text-teal-600 border-b-2 border-teal-500"
+          >
+            Категорії
+          </NuxtLink>
         </nav>
       </template>
 

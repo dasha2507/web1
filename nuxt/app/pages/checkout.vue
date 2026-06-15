@@ -25,7 +25,7 @@ const totalDue = computed(() => {
 })
 
 const form = ref({
-  cardNumber: '', expiry: '', cvc: '', fullName: 'dev4 dev4', address: '', consent: false
+  cardNumber: '', expiry: '', cvc: '', fullName: '', address: '', consent: false
 })
 
 const submitForm = async () => {
