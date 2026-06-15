@@ -2,12 +2,12 @@
 import { h, resolveComponent, ref, computed, watch } from 'vue'
 import type { TableColumn } from '@nuxt/ui'
 
-// Динамічний резолв компонентів для використання всередині колонок UTable (render-функції h)
 const UButton = resolveComponent('UButton')
 const UDropdownMenu = resolveComponent('UDropdownMenu')
 const UBadge = resolveComponent('UBadge')
 
-// Опис типу об'єкта Категорії
+const toast = useToast() // Ініціалізуємо тости
+
 type Category = {
   id: number
   title: string
@@ -15,32 +15,30 @@ type Category = {
   parent_id: number | null
 }
 
+const config = useRuntimeConfig()
+const apiBase = config.public.apiBase
+
 const page = ref(1)
 const search = ref('')
 
-// Запит даних із сервера Laravel. Параметри query обгорнуті в computed,
-// щоб кожна зміна search або page автоматично викликала новий запит до API.
-const { data: response, pending, refresh } = await useFetch<any>('http://localhost/api/admin/blog/categories', {
+const { data: response, pending, refresh } = await useFetch<any>(`${apiBase}/admin/blog/categories`, {
   lazy: true,
   server: false,
   query: computed(() => ({
     page: page.value,
     search: search.value,
-    per_page: 5 // Кількість елементів на сторінку
+    per_page: 5
   }))
 })
 
-// Безпечне отримання масиву та мета-даних пагінації з відповіді сервера
 const categories = computed<Category[]>(() => response.value?.data || [])
 const total = computed(() => response.value?.meta?.total || 0)
 const perPage = computed(() => response.value?.meta?.per_page || 5)
 
-// Якщо користувач починає шукати, скидаємо пагінацію на 1 сторінку
 watch(search, () => {
   page.value = 1
 })
 
-// Конфігурація колонок таблиці Nuxt UI
 const columns: TableColumn<Category>[] = [
   {
     accessorKey: 'id',
@@ -85,13 +83,24 @@ const columns: TableColumn<Category>[] = [
                 onSelect: async () => {
                   if (confirm(`Точно видалити категорію "${row.original.title}"?`)) {
                     try {
-                      await $fetch(`http://localhost/api/admin/blog/categories/${row.original.id}`, {
+                      await $fetch(`${apiBase}/admin/blog/categories/${row.original.id}`, {
                         method: 'DELETE'
                       })
-                      refresh() // Перезавантажує дані у таблиці без перезавантаження сторінки
+
+                      toast.add({
+                        title: 'Категорію видалено',
+                        description: `Категорія "${row.original.title}" успішно видалена.`,
+                        color: 'success'
+                      })
+
+                      refresh()
                     } catch (error) {
                       console.error(error)
-                      alert('Не вдалося видалити категорію. Можливо, вона містить статті?')
+                      toast.add({
+                        title: 'Помилка видалення',
+                        description: 'Не вдалося видалити категорію. Можливо, до неї ще прив\'язані статті блогу.',
+                        color: 'error'
+                      })
                     }
                   }
                 }

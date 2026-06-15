@@ -1,19 +1,30 @@
 <script setup lang="ts">
-import { reactive, ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { reactive, ref, onMounted } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
 import { z } from 'zod'
 import type { FormSubmitEvent } from '@nuxt/ui'
 
 const router = useRouter()
-const isSubmitting = ref(false)
+const route = useRoute()
+const categoryId = route.params.id as string
+
 const config = useRuntimeConfig()
 const apiBase = config.public.apiBase
+
+const isSubmitting = ref(false)
+const isLoading = ref(true)
 const toast = useToast() // Ініціалізуємо тости
 
 interface ApiResponse {
   success: boolean
   message: string
-  id?: number
+}
+
+interface CategoryData {
+  id: number
+  title: string
+  slug: string | null
+  parent_id: number | null
 }
 
 const schema = z.object({
@@ -25,12 +36,32 @@ type Schema = z.infer<typeof schema>
 
 const state = reactive<Schema>({ title: '', slug: '' })
 
+onMounted(async () => {
+  try {
+    const response = await $fetch<{ data: CategoryData }>(`${apiBase}/admin/blog/categories/${categoryId}`)
+    const category = response.data ?? response
+
+    state.title = category.title
+    state.slug = category.slug || ''
+  } catch (error) {
+    console.error('Помилка завантаження категорії:', error)
+    toast.add({
+      title: 'Помилка завантаження',
+      description: 'Не вдалося завантажити дані категорії.',
+      color: 'error'
+    })
+    router.push('/categories')
+  } finally {
+    isLoading.value = false
+  }
+})
+
 async function onSubmit(event: FormSubmitEvent<Schema>) {
   isSubmitting.value = true
 
   try {
-    const result = await $fetch<ApiResponse>(`${apiBase}/admin/blog/categories`, {
-      method: 'POST',
+    const result = await $fetch<ApiResponse>(`${apiBase}/admin/blog/categories/${categoryId}`, {
+      method: 'PUT',
       body: {
         title: event.data.title,
         slug: event.data.slug || null
@@ -39,15 +70,15 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
 
     if (result && result.success) {
       toast.add({
-        title: 'Категорію створено!',
-        description: `Нову категорію "${event.data.title}" успішно додано до бази даних.`,
+        title: 'Категорію оновлено!',
+        description: `Зміни для "${event.data.title}" успішно збережено.`,
         color: 'success'
       })
       router.push('/categories')
     } else {
       toast.add({
-        title: 'Помилка створення',
-        description: result.message || 'Не вдалося створити категорію.',
+        title: 'Помилка оновлення',
+        description: result.message || 'Не вдалося оновити категорію.',
         color: 'error'
       })
     }
@@ -55,7 +86,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
     console.error('Помилка:', error)
     toast.add({
       title: 'Помилка з\'єднання',
-      description: 'Помилка з\'єднання з сервером Docker Sail.',
+      description: 'Не вдалося зв\'язатися з сервером Laravel.',
       color: 'error'
     })
   } finally {
@@ -68,8 +99,12 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
   <div class="max-w-xl mx-auto py-12 px-4">
     <UCard>
       <template #header>
-        <h2 class="font-bold text-2xl text-slate-800">Створення нової категорії</h2>
+        <h2 class="font-bold text-2xl text-slate-800">Редагування категорії</h2>
       </template>
+
+      <div v-if="isLoading" class="text-center py-8 text-gray-400">
+        Завантаження...
+      </div>
 
       <UForm :schema="schema" :state="state" class="space-y-6" @submit="onSubmit">
 
@@ -88,7 +123,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
             :loading="isSubmitting"
             class="px-6 font-bold"
           >
-            Створити
+            Зберегти
           </UButton>
 
           <UButton

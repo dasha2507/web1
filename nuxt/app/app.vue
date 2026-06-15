@@ -75,6 +75,8 @@ useHead({
         <p class="text-xs text-gray-400 font-medium">Built with Nuxt UI • © {{ new Date().getFullYear() }}</p>
       </template>
     </UFooter>
+
+    <UToaster />
   </UApp>
 </template>
 
